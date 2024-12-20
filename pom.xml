@@ -1,140 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.sonarqube</groupId>
-	<artifactId>sonarscanner-maven-aggregate</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>Example of multi-module Maven project</name>
-	<modules>
-		<module>module1</module>
-		<module>module2</module>
-		<module>tests</module>
-	</modules>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>27.1-jre</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
-					<configuration>
-						<source>7</source>
-						<target>7</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonarsource.scanner.maven</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>3.6.0.1398</version>
-				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.4</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.1</version>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.5.1</version>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<serverId>nexus-snapshots</serverId>
-						<nexusUrl>http://54.197.115.228:8081/nexus</nexusUrl>
-						<skipStaging>true</skipStaging>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-	<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<!-- Optional URL to server. Default value is http://localhost:9000 -->
-				<sonar.host.url>
-                    http://3.88.90.163:9000/
-                </sonar.host.url>
-				<sonar.login>sqa_63f7e5ec7cb6b007c5f9c59d4347afe878282523</sonar.login>
-			</properties>
-		</profile>
-		<profile>
-			<id>coverage</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>prepare-agent</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<distributionManagement>
-		<repository>
-			<id>nexus-Repo</id>
-			<url>http://54.197.115.228/:8081/repository/maven-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-Repo</id>
-			<url>http://54.197.115.228:8081/repository/maven-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-app</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>My Application</name>
+    <description>A Maven project with SonarQube and Nexus integration</description>
+
+    <!-- Repositories for dependencies -->
+    <repositories>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://your-nexus-server/repository/releases</url>
+        </repository>
+        <repository>
+            <id>nexus-snapshots</id>
+            <url>http://your-nexus-server/repository/snapshots</url>
+        </repository>
+    </repositories>
+
+    <!-- Distribution Management for deployment -->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://your-nexus-server/repository/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://your-nexus-server/repository/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!-- Build and Plugins -->
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Deploy Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
+            <!-- SonarQube Scanner Plugin -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Properties -->
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <sonar.host.url>http://your-sonarqube-server</sonar.host.url>
+        <sonar.login>your-sonarqube-token</sonar.login>
+    </properties>
 </project>
